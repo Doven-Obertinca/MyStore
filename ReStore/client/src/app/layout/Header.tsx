@@ -8,7 +8,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ darkMode, onChange }) => {
   return (
-    <AppBar position="static" sx={{ mb: 4 }}>
+    <AppBar position="static" sx={{ mb: 4, backgroundColor: "#2da8a8" }}>
       <Toolbar>
         <Switch onChange={onChange} checked={darkMode} {...label} />
         <Typography variant="h6">RE-STORE</Typography>

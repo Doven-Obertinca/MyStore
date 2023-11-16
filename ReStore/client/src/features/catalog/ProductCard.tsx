@@ -32,7 +32,7 @@ const ProductCard = ({ product }: Props) => {
         sx={{
           height: 140,
           backgroundSize: "contain",
-          bgcolor: "primary.light",
+          bgcolor: "#2da8a8",
         }}
         image={product.pictureUrl}
         title={product.name}

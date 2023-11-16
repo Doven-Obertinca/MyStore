@@ -13,7 +13,7 @@ import { NavLink } from "react-router-dom";
 
 const midLinks = [
   { title: "catalog", path: "/catalog" },
-  { title: "aboutg", path: "/about" },
+  { title: "about", path: "/about" },
   { title: "contact", path: "/contact" },
 ];
 
@@ -21,6 +21,17 @@ const rightLinks = [
   { title: "login", path: "/login" },
   { title: "register", path: "/register" },
 ];
+
+const linkStyles = {
+  color: "inherit",
+  typography: "h6",
+  "&:hover": {
+    color: "grey.A700",
+  },
+  "&.active": {
+    color: "text.secondary",
+  },
+};
 
 const label = { inputProps: { "aria-label": "Switch demo" } };
 interface HeaderProps {
@@ -32,11 +43,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode, onChange }) => {
   return (
     <AppBar position="static" sx={{ mb: 4, backgroundColor: "#2da8a8" }}>
       <Toolbar>
-        <Typography
-          component={NavLink}
-          to="/"
-          variant="h6"
-          sx={{ color: "inherit", textDecoration: "none" }}>
+        <Typography component={NavLink} to="/" variant="h6" sx={linkStyles}>
           RE-STORE
         </Typography>
         <Switch onChange={onChange} checked={darkMode} {...label} />
@@ -47,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode, onChange }) => {
                 component={NavLink}
                 to={path}
                 key={path}
-                sx={{ color: "inherit", typography: "h6" }}>
+                sx={linkStyles}>
                 {title.toLocaleUpperCase()}
               </ListItem>
             );
@@ -67,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode, onChange }) => {
                 component={NavLink}
                 to={path}
                 key={path}
-                sx={{ color: "inherit", typography: "h6" }}>
+                sx={linkStyles}>
                 {title.toLocaleUpperCase()}
               </ListItem>
             );

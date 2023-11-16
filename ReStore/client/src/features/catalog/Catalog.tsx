@@ -1,26 +1,25 @@
-import {
-  //   Avatar,
-  Button,
-  //   List,
-  //   ListItem,
-  //   ListItemAvatar,
-  //   ListItemText,
-} from "@mui/material";
 import { Product } from "../../app/models/product";
+import { useState, useEffect } from "react";
 import ProductList from "./ProductList";
 
-interface Props {
-  products: Product[];
-  addProduct: () => void;
-}
+const Catalog = () => {
+  const [products, setProducts] = useState<Product[]>([]);
 
-const Catalog = ({ products, addProduct }: Props) => {
+  useEffect(() => {
+    fetch("http://localhost:5000/api/products")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => setProducts(data))
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
+
   return (
     <>
       <ProductList products={products} />
-      <Button variant="contained" onClick={addProduct}>
-        Add product
-      </Button>
     </>
   );
 };

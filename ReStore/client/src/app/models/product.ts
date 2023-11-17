@@ -8,5 +8,5 @@ export interface Product {
     pictureUrl: string;
     type?: string;
     brand: string;
-    quantityInstock?: number;
+    quantityInStock?: number;
 }

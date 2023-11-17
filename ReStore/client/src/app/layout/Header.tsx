@@ -2,6 +2,7 @@ import { ShoppingCart } from "@mui/icons-material";
 import {
   AppBar,
   Badge,
+  Box,
   IconButton,
   List,
   ListItem,
@@ -42,11 +43,14 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ darkMode, onChange }) => {
   return (
     <AppBar position="static" sx={{ mb: 4, backgroundColor: "#2da8a8" }}>
-      <Toolbar>
-        <Typography component={NavLink} to="/" variant="h6" sx={linkStyles}>
-          RE-STORE
-        </Typography>
-        <Switch onChange={onChange} checked={darkMode} {...label} />
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box display="flex" alignItems="center">
+          <Typography component={NavLink} to="/" variant="h6" sx={linkStyles}>
+            RE-STORE
+          </Typography>
+          <Switch onChange={onChange} checked={darkMode} {...label} />
+        </Box>
+
         <List sx={{ display: "flex" }}>
           {midLinks.map(({ title, path }) => {
             return (
@@ -60,26 +64,27 @@ const Header: React.FC<HeaderProps> = ({ darkMode, onChange }) => {
             );
           })}
         </List>
+        <Box display="flex" alignItems="center">
+          <IconButton size="large" edge="start" color="inherit" sx={{ mr: 2 }}>
+            <Badge badgeContent="4" color="secondary">
+              <ShoppingCart />
+            </Badge>
+          </IconButton>
 
-        <IconButton size="large" edge="start" color="inherit" sx={{ mr: 2 }}>
-          <Badge badgeContent="4" color="secondary">
-            <ShoppingCart />
-          </Badge>
-        </IconButton>
-
-        <List sx={{ display: "flex" }}>
-          {rightLinks.map(({ title, path }) => {
-            return (
-              <ListItem
-                component={NavLink}
-                to={path}
-                key={path}
-                sx={linkStyles}>
-                {title.toLocaleUpperCase()}
-              </ListItem>
-            );
-          })}
-        </List>
+          <List sx={{ display: "flex" }}>
+            {rightLinks.map(({ title, path }) => {
+              return (
+                <ListItem
+                  component={NavLink}
+                  to={path}
+                  key={path}
+                  sx={linkStyles}>
+                  {title.toLocaleUpperCase()}
+                </ListItem>
+              );
+            })}
+          </List>
+        </Box>
       </Toolbar>
     </AppBar>
   );

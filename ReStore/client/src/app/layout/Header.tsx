@@ -46,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode, onChange }) => {
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box display="flex" alignItems="center">
           <Typography component={NavLink} to="/" variant="h6" sx={linkStyles}>
-            RE-STORE
+            Hana-Interadria
           </Typography>
           <Switch onChange={onChange} checked={darkMode} {...label} />
         </Box>

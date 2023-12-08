@@ -1,6 +1,7 @@
 using System.Reflection.Metadata;
 using System.Xml.Schema;
 using API.Data;
+using API.Middleware;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
 

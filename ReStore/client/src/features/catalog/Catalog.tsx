@@ -7,14 +7,8 @@ const Catalog = () => {
 
   useEffect(() => {
     fetch("http://localhost:5000/api/products")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => setProducts(data))
-      .catch((error) => console.error("Error fetching data:", error));
+      .then((response) => response.json())
+      .then((data) => setProducts(data));
   }, []);
 
   return (

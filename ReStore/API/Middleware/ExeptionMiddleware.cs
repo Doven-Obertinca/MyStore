@@ -1,48 +1,58 @@
 
-
-
-
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 
-public class ExeptionMiddleware
+namespace API.Middleware
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<ExeptionMiddleware> _logger;
-    private readonly IWebHostEnvironment _env;
 
-    public ExeptionMiddleware(RequestDelegate next, ILogger<ExeptionMiddleware> logger, IWebHostEnvironment env)
+
+    public class ExeptionMiddleware
     {
-        _next = next;
-        _logger = logger;
-        _env = env;
-    }
-    public async Task InvokeAsync(HttpContext context)
-    {
-        try
+        private readonly RequestDelegate _next;
+        private readonly ILogger<ExeptionMiddleware> _logger;
+        private readonly IHostEnvironment _env;
+
+        public ExeptionMiddleware(RequestDelegate next, ILogger<ExeptionMiddleware> logger,
+        IHostEnvironment env)
         {
-            await _next(context);
+            _env = env;
+            _logger = logger;
+            _next = next;
         }
-        catch (Exception ex)
+        public async Task InvokeAsync(HttpContext context)
         {
-
-            _logger.LogError(ex, ex.Message);
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = 500;
-
-            var response = new ProblemDetails
+            try
             {
-                Status = 500,
-                Detail = _env.IsDevelopment() ? ex.StackTrace?.ToString() : null,
-                Title = ex.Message
-            };
-            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+                await _next(context);
+            }
+            catch (Exception ex)
+            {
 
-            var json = JsonSerializer.Serialize(response, options);
-            await context.Response.WriteAsync(json);
+                _logger.LogError(ex, ex.Message);
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = 500;
+
+                var response = new ProblemDetails
+                {
+                    Status = 500,
+                    Detail = _env.IsDevelopment() ? ex.StackTrace?.ToString() : null,
+                    Title = ex.Message
+                };
+                var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
+                var json = JsonSerializer.Serialize(response, options);
+                await context.Response.WriteAsync(json);
+            }
+
         }
 
+        // The rest of your middleware class...
     }
 
-    // The rest of your middleware class...
+    internal class ProblemDetails
+    {
+        public int Status { get; set; }
+        public string Detail { get; set; }
+        public string Title { get; set; }
+    }
 }

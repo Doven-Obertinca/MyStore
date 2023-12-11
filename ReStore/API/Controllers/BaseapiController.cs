@@ -16,7 +16,5 @@ namespace API.Controllers
 
     }
 
-    internal class ApiControllerAttribute : Attribute
-    {
-    }
+
 }

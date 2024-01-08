@@ -1,70 +1,79 @@
+/* eslint-disable @typescript-eslint/ban-types */
 
 
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
+import { router } from "../router/Routes";
 
 axios.defaults.baseURL = "http://localhost:5000/api/";
+axios.defaults.withCredentials = true;
 
 
-const responseBody = (response: AxiosResponse) => response.data;
 
-axios.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error: AxiosError) => {
-    if (error.response && error.response.data) {
-      const { data, status } = error.response as AxiosResponse;
-      switch (status) {
-        case 400:
-          if(data.errors){
-            const modelStateErrors: string[] = [];
-            for(const key in data.errors){
-              if(data.errors[key]){
-                modelStateErrors.push(data.erros[key])
+function responseBody(response: AxiosResponse) {
+  return response.data;
+}
+
+axios.interceptors.response.use(async response => {
+
+  return response
+}, (error: AxiosError) => {
+  const {data, status} = error.response as AxiosResponse;
+  switch (status) {
+      case 400:
+          if (data.errors) {
+              const modelStateErrors: string[] = [];
+              for (const key in data.errors) {
+                  if (data.errors[key]) {
+                      modelStateErrors.push(data.errors[key])
+                  }
               }
-            }
-            throw modelStateErrors.flat()
+              throw modelStateErrors.flat();
           }
           toast.error(data.title);
           break;
-        case 401:
+      case 401:
           toast.error(data.title);
           break;
-        case 404:
-          // Handle 404 Not Found error
-          toast.error("Resource not found");
-          if (error.config && error.config.url) {
-            console.error("Resource not found:", error.config.url); // Log the URL for debugging
-          } else {
-            console.error("Resource not found - URL not available");
-          }
+      case 403: 
+          toast.error('You are not allowed to do that!');
           break;
-        case 500:
-          toast.error(data.title);
+          case 404:
+        toast.error("Resource not found");
+        // Handle 404 error appropriately, e.g., show a message or redirect
+        break;
+      case 500:
+          router.navigate('/server-error', {state: {error: data}});
           break;
-        default:
+      default:
           break;
-      }
-      return Promise.reject(error.response);
-    } else {
-      // Handle non-HTTP errors here
-      console.error("Network error:", error.message);
-      // You can toast a general error message here if needed
-      toast.error("An unexpected error occurred.");
-      return Promise.reject(error);
-    }
   }
-);
 
+  return Promise.reject(error.response);
+})
+
+
+// const requests = {
+//   get: (url: string) => axios.get(url).then(responseBody),
+//   // eslint-disable-next-line @typescript-eslint/ban-types
+//   post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
+//   // eslint-disable-next-line @typescript-eslint/ban-types
+//   put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
+//   delete: (url: string) => axios.delete(url).then(responseBody),
+// };
 const requests = {
-  get: (url: string) => axios.get(url).then(responseBody),
+  get: (url: string, params?: URLSearchParams) => axios.get(url, {params}).then(responseBody),
   // eslint-disable-next-line @typescript-eslint/ban-types
   post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
-  // eslint-disable-next-line @typescript-eslint/ban-types
   put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
   delete: (url: string) => axios.delete(url).then(responseBody),
-};
+  postForm: (url: string, data: FormData) => axios.post(url, data, {
+      headers: {'Content-type': 'multipart/form-data'}
+  }).then(responseBody),
+  putForm: (url: string, data: FormData) => axios.put(url, data, {
+      headers: {'Content-type': 'multipart/form-data'}
+  }).then(responseBody)
+}
 
 const Catalog = {
   list: () => requests.get('products'),

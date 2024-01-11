@@ -5,6 +5,8 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { router } from "../router/Routes";
 
+const sleep = () => new Promise(resolve => setTimeout(resolve, 500)) ;
+
 axios.defaults.baseURL = "http://localhost:5000/api/";
 axios.defaults.withCredentials = true;
 
@@ -15,6 +17,7 @@ function responseBody(response: AxiosResponse) {
 }
 
 axios.interceptors.response.use(async response => {
+  await sleep();
 
   return response
 }, (error: AxiosError) => {

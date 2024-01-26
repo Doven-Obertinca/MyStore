@@ -10,12 +10,45 @@ import {
 } from "@mui/material";
 import { Product } from "../../app/models/product";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import agent from "../../app/api/agent";
+import { LoadingButton } from "@mui/lab";
 
 interface Props {
   product: Product;
 }
 
 const ProductCard = ({ product }: Props) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleAddItem = (productId: number) => {
+    console.log("Function called. Product ID:", productId); // Add this line
+    setLoading(true);
+    agent.Basket.addItem(productId)
+      .then(() => console.log("API call succeeded. Product ID:", productId))
+      .catch((error) => console.log("API call failed. Error:", error))
+      .finally(() => {
+        console.log("Finally block. Product ID:", productId);
+        setLoading(false);
+      });
+  };
+
+  // const handleAddItem = async (productId: number) => {
+  //   // Await the promise to get the actual URL
+  //   const apiUrl = await agent.Basket.addItem(productId);
+
+  //   // Log the constructed API call URL
+  //   console.log(`API Call URL: ${apiUrl}`);
+
+  //   // Set loading to true before making the API call
+  //   setLoading(true);
+
+  //   // Make the API call
+  //   agent.Basket.addItem(productId)
+  //     .catch((error) => console.log(error))
+  //     .finally(() => setLoading(false));
+  // };
+
   return (
     <Card>
       <CardHeader
@@ -47,7 +80,12 @@ const ProductCard = ({ product }: Props) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Add to cart</Button>
+        <LoadingButton
+          loading={loading}
+          onClick={() => handleAddItem(product.id)}
+          size="small">
+          Add to cart
+        </LoadingButton>
         <Button size="small" component={Link} to={`/catalog/${product.id}`}>
           View
         </Button>

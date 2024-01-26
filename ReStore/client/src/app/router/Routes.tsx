@@ -34,11 +34,11 @@ export const router = createBrowserRouter([
         element: <ContactPage />,
       },
       {
-        path: "server-errort",
+        path: "/server-error",
         element: <ServerError />,
       },
       {
-        path: "not-found",
+        path: "/not-found",
         element: <NotFound />,
       },
       { path: "*", element: <Navigate replace to="/not-found" /> },

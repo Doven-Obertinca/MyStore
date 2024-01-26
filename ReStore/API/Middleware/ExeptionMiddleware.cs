@@ -25,14 +25,14 @@ namespace API.Middleware
         {
             try
             {
-                // Log the request details
+                // Log the request details at a higher level (Information)
                 _logger.LogInformation($"Request to: {context.Request.Path}");
 
                 await _next(context);
             }
             catch (Exception ex)
             {
-                // Log the exception details
+                // Log the exception details at a higher level (Error)
                 _logger.LogError(ex, ex.Message);
 
                 context.Response.ContentType = "application/json";
@@ -45,7 +45,7 @@ namespace API.Middleware
                     Title = ex.Message
                 };
 
-                // Log the response details
+                // Log the response details at a higher level (Information)
                 _logger.LogInformation($"Response: {JsonSerializer.Serialize(response)}");
 
                 var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };

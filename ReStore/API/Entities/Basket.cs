@@ -44,7 +44,9 @@ namespace API.Entities
                     ProductId = item.Product.Id,
                     Name = item.Product.Name, // Add product name property
                     Price = item.Product.Price, // Add product price property
-                    Quantity = item.Quantity
+                    Quantity = item.Quantity,
+                    PictureUrl = item.Product.PictureUrl
+
                 }).ToList()
             };
         }

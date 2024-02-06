@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react";
-import agent from "../../app/api/agent";
-import { Basket } from "../../app/models/basket";
-import LoadingComponent from "../../app/layout/LoadingComponent";
 import {
+  Box,
   IconButton,
   Paper,
   Table,
@@ -13,22 +10,14 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { Delete } from "@mui/icons-material";
+import { Add, Delete, Remove } from "@mui/icons-material";
+import { useStoreContext } from "../../app/context/StoreContext";
 
 const BasketPage = () => {
-  const [loading, setLoading] = useState(true);
-  const [basket, setBasket] = useState<Basket | null>(null);
-
-  useEffect(() => {
-    agent.Basket.get()
-      .then((basket) => setBasket(basket))
-      .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) return <LoadingComponent message="Loading basket..." />;
+  const { basket } = useStoreContext();
   if (!basket)
     return <Typography variant="h3">Your basket is empty</Typography>;
+  basket.items.forEach((item) => console.log("Picture URL:", item.pictureUrl));
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
@@ -47,12 +36,28 @@ const BasketPage = () => {
               key={item.productId}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
               <TableCell component="th" scope="row">
-                {item.name}
+                <Box display="flex" alignItems="center">
+                  <img
+                    src={item.pictureUrl}
+                    alt={item.name}
+                    style={{ height: 50, marginRight: 20 }}
+                  />
+                  <span>{item.name}</span>
+                </Box>
               </TableCell>
               <TableCell align="right">
                 €{(item.price / 100).toFixed(2)}
               </TableCell>
-              <TableCell align="right">{item.quantity}</TableCell>
+              <TableCell align="right">
+                <IconButton color="error">
+                  <Remove />
+                </IconButton>
+
+                {item.quantity}
+                <IconButton color="error">
+                  <Add />
+                </IconButton>
+              </TableCell>
               <TableCell align="right">
                 {((item.price / 100) * item.quantity).toFixed(2)}
               </TableCell>

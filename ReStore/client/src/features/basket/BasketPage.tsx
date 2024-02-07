@@ -1,6 +1,8 @@
 import {
   Box,
+  Button,
   Grid,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -35,9 +37,8 @@ const BasketPage = () => {
   const handleRemoveItem = (productId: number, quantity = 1, name: string) => {
     setStatus({ loading: true, name });
     agent.Basket.removeItem(productId, quantity)
-      .then(() =>
-        removeItem(productId, quantity).catch((error) => console.log(error))
-      )
+      .then(() => removeItem(productId, quantity))
+      .catch((error) => console.log(error))
       .finally(() => setStatus({ loading: false, name: "" }));
   };
   if (!basket)
@@ -130,6 +131,14 @@ const BasketPage = () => {
         <Grid item xs={6} />
         <Grid item xs={6}>
           <BasketSummary />
+          <Button
+            component={Link}
+            to="/checkout"
+            variant="conatained"
+            size="large"
+            fullWidth>
+            Checkout
+          </Button>
         </Grid>
       </Grid>
     </>
